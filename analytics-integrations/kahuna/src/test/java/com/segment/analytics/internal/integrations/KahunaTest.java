@@ -97,7 +97,6 @@ public class KahunaTest {
     initMocks(this);
     final KahunaCommon mockedKahunaCommon = mock(KahunaCommon.class);
     PowerMockito.mockStatic(Kahuna.class);
-    //PowerMockito.whenNew(Kahuna.class).withNoArguments().thenReturn(kahuna);
     PowerMockito.when(Kahuna.getInstance()).thenReturn(kahuna);
     PowerMockito.when(kahuna.createUserCredentials()).thenReturn(credentials);
     integration = new KahunaIntegration();
@@ -110,9 +109,9 @@ public class KahunaTest {
         .putValue("apiKey", "foo") //
         .putValue("pushSenderId", "bar"));
 
-    verify(Kahuna.getInstance()).onAppCreate(context, "foo", "bar");
-    verify(Kahuna.getInstance()).setHybridSDKVersion("segment_sdk_version", VERSION_NAME);
-    verify(Kahuna.getInstance()).setDebugMode(false);
+    verify(kahuna).onAppCreate(context, "foo", "bar");
+    verify(kahuna).setHybridSDKVersion("segment_sdk_version", VERSION_NAME);
+    verify(kahuna).setDebugMode(false);
     assertThat(integration.trackAllPages).isFalse();
     verifyNoMoreInteractions(kahuna);
   }
@@ -124,9 +123,9 @@ public class KahunaTest {
         .putValue("trackAllPages", true).putValue("apiKey", "foo") //
         .putValue("pushSenderId", "bar"));
 
-    verify(Kahuna.getInstance()).onAppCreate(context, "foo", "bar");
-    verify(Kahuna.getInstance()).setHybridSDKVersion("segment_sdk_version", VERSION_NAME);
-    verify(Kahuna.getInstance()).setDebugMode(false);
+    verify(kahuna).onAppCreate(context, "foo", "bar");
+    verify(kahuna).setHybridSDKVersion("segment_sdk_version", VERSION_NAME);
+    verify(kahuna).setDebugMode(false);
     assertThat(integration.trackAllPages).isTrue();
     verifyNoMoreInteractions(kahuna);
   }
@@ -141,7 +140,7 @@ public class KahunaTest {
   @Test public void activityStart() {
     Activity activity = mock(Activity.class);
     integration.onActivityStarted(activity);
-    verify(Kahuna.getInstance()).start();
+    verify(kahuna).start();
     verifyNoMoreInteractions(kahuna);
   }
 
@@ -160,7 +159,7 @@ public class KahunaTest {
   @Test public void activityStop() {
     Activity activity = mock(Activity.class);
     integration.onActivityStopped(activity);
-    verify(Kahuna.getInstance()).stop();
+    verify(kahuna).stop();
     verifyNoMoreInteractions(kahuna);
   }
 
@@ -180,16 +179,16 @@ public class KahunaTest {
   @Test public void track() {
     integration.track(new TrackPayloadBuilder().event("foo").build());
 
-    verify(Kahuna.getInstance()).trackEvent("foo");
+    verify(kahuna).trackEvent("foo");
     verifyNoMoreInteractions(kahuna);
   }
 
   @Test public void trackWithQuantityAndRevenue() {
     integration.track(new TrackPayloadBuilder().event("bar")
-            .properties(new Properties().putValue("quantity", 3).putRevenue(10))
+        .properties(new Properties().putValue("quantity", 3).putRevenue(10))
             .build());
 
-    verify(Kahuna.getInstance()).trackEvent("bar", 3, 1000);
+    verify(kahuna).trackEvent("bar", 3, 1000);
     verifyNoMoreInteractions(kahuna);
   }
 
@@ -220,7 +219,7 @@ public class KahunaTest {
     PowerMockito.when(Kahuna.getInstance().getUserAttributes()).thenReturn(map);
 
     integration.trackViewedProductCategory(new TrackPayloadBuilder() //
-            .event(VIEWED_PRODUCT_CATEGORY).build());
+        .event(VIEWED_PRODUCT_CATEGORY).build());
 
     Map<String, String> expectedAttributes = new LinkedHashMap<>();
     expectedAttributes.put(CATEGORIES_VIEWED, NONE);
@@ -237,8 +236,8 @@ public class KahunaTest {
     PowerMockito.when(Kahuna.getInstance().getUserAttributes()).thenReturn(map);
 
     integration.trackViewedProductCategory(new TrackPayloadBuilder().event(VIEWED_PRODUCT_CATEGORY)
-            .properties(new Properties().putCategory("foo"))
-        .build());
+        .properties(new Properties().putCategory("foo"))
+            .build());
 
     Map<String, String> expectedAttributes = new LinkedHashMap<>();
     expectedAttributes.put(CATEGORIES_VIEWED, "foo");
@@ -330,7 +329,7 @@ public class KahunaTest {
     PowerMockito.when(Kahuna.getInstance().getUserAttributes()).thenReturn(map);
 
     integration.trackViewedProduct(new TrackPayloadBuilder().event(VIEWED_PRODUCT)
-            .properties(new Properties().putName("foo"))
+        .properties(new Properties().putName("foo"))
             .build());
 
     Map<String, String> expectedAttributes = new LinkedHashMap<>();
@@ -421,7 +420,7 @@ public class KahunaTest {
 
     integration.trackAddedProductCategory(new TrackPayloadBuilder().event(ADDED_PRODUCT)
         .properties(new Properties().putCategory("foo"))
-        .build());
+            .build());
 
     Map<String, String> expectedAttributes = new LinkedHashMap<>();
     expectedAttributes.put(LAST_PRODUCT_ADDED_TO_CART_CATEGORY, "foo");
@@ -542,7 +541,7 @@ public class KahunaTest {
   @Test public void reset() {
     integration.reset();
 
-    verify(Kahuna.getInstance()).logout();
+    verify(kahuna).logout();
     verifyNoMoreInteractions(kahuna);
   }
 }
