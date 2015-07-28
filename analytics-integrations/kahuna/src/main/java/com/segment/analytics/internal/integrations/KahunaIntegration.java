@@ -119,7 +119,7 @@ public class KahunaIntegration extends AbstractIntegration<Void> {
     }
     try {
       Kahuna.getInstance().login(credentials);
-    } catch(EmptyCredentialsException e) {
+    } catch (EmptyCredentialsException e) {
       error(e, "You should call reset() instead of passed in all empty/null values to identify().");
     }
     Kahuna.getInstance().setUserAttributes(userAttributes);
